@@ -2,12 +2,10 @@ version: "3.6"
 
 services:
   pax-service:
-    build:
-    context: ./services/pax
-    dockerfile: Dockerfile
+    image: paxapp/pax-pax:latest
     volumes:
-      - "./services/pax:/usr/src/app"
+      - ".:/app"
     ports:
-      - 5001:5000
+      - 5003:5000
     environment:
-      - FLASK_APP=project/__init
+      - FLASK_APP=project/__init__.py
