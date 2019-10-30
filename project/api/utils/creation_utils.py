@@ -23,7 +23,9 @@ class Utils:
     def createSuccessGet(self, content):
         response_object = {
             'status': 'success',
-            'data': content
+            'data': {
+                'pax': [pax.to_json() for pax in content]
+            }
         }
         return response_object
 
