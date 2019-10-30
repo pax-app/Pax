@@ -77,3 +77,16 @@ def get_canceled_pax(user_kind, id):
         return jsonify(utils.createFailMessage('Cannot find user')), 404
 
     return jsonify(utils.createSuccessGet(canceled_pax.to_json())), 200
+
+
+@pax_blueprint.route('/pendent_pax/<user_kind>/<id>', methods=['GET'])
+def get_pendent_pax(user_kind, id):
+    try:
+        context = Context(PendentStrategy())
+        pendent_pax = context.execute_filtering(user_kind, int(id))
+        if not pendent_pax:
+            return jsonify(utils.createFailMessage('Cannot find user')), 404
+    except ValueError:
+        return jsonify(utils.createFailMessage('Cannot find user')), 404
+
+    return jsonify(utils.createSuccessGet(pendent_pax.to_json())), 200
