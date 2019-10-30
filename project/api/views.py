@@ -3,6 +3,7 @@ from database_singleton import Singleton
 from project.api.utils.creation_utils import Utils
 from project.api.models import Pax
 from sqlalchemy import exc
+from project.api.utils.status_strategy import Context, InitiatedStrategy, FinalizedStrategy, CanceledStrategy, PendentStrategy
 
 pax_blueprint = Blueprint('pax', __name__)
 db = Singleton().database_connection()
@@ -37,3 +38,16 @@ def add_pax():
     except exc.IntegrityError:
         db.session.rollback()
         return jsonify(utils.createFailMessage('Wrong JSON')), 400
+
+
+@pax_blueprint.route('/finalized_pax/<user_kind>/<id>', methods=['GET'])
+def get_finalized_pax(user_kind, id):
+    try:
+        context = Context(FinalizedStrategy())
+        finalized_pax = context.execute_filtering(user_kind, int(id))
+        if not finalized_pax:
+            return jsonify(utils.createFailMessage('Cannot find user')), 404
+    except ValueError:
+        return jsonify(utils.createFailMessage('Cannot find user')), 404
+
+    return jsonify(utils.createSuccessGet(finalized_pax.to_json())), 200
