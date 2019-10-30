@@ -19,7 +19,7 @@ def add_pax():
 
     pax = post_data.get('pax')
 
-    data = pax.get('data')
+    date = pax.get('date')
     description = pax.get('description')
     name = pax.get('name')
     price = pax.get('price')
@@ -30,7 +30,7 @@ def add_pax():
     address_id = pax.get('address_id')
 
     try:
-        pax = Pax(data, description, name,
+        pax = Pax(date, description, name,
                   price, status, user_id, provider_id, chat_id, address_id)
         utils.commit_to_database(pax)
         return jsonify(utils.createSuccessMessage('Pax was created!')), 201

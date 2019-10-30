@@ -7,7 +7,7 @@ class Pax(db.Model):
     __tablename__ = 'PAX'
 
     pax_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    data = db.Column(db.Date, nullable=False)
+    date = db.Column(db.Date, nullable=False)
     description = db.Column(db.String(500), nullable=False)
     name = db.Column(db.String(255), nullable=False)
     price = db.Column(db.Float, nullable=False)
@@ -17,8 +17,8 @@ class Pax(db.Model):
     chat_id = db.Column(db.Integer, nullable=False)
     address_id = db.Column(db.Integer, nullable=False)
 
-    def __init__(self, data, description, name, price, status, user_id, provider_id, chat_id, address_id):
-        self.data = data
+    def __init__(self, date, description, name, price, status, user_id, provider_id, chat_id, address_id):
+        self.date = date
         self.description = description
         self.name = name
         self.price = price
@@ -31,7 +31,7 @@ class Pax(db.Model):
     def to_json(self):
         return {
             'id': self.pax_id,
-            'data': self.data,
+            'date': self.date,
             'description': self.description,
             'name': self.name,
             'price': self.price,
