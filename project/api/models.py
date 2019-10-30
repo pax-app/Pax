@@ -20,12 +20,16 @@ class Pax(db.Model):
     chat_id = db.Column(db.Integer, nullable=False)
     address_id = db.Column(db.Integer, nullable=False)
 
-    def __init__(self, data, description, name, price, status):
+    def __init__(self, data, description, name, price, status, user_id, provider_id, chat_id, address_id):
         self.data = data
         self.description = description
         self.name = name
         self.price = price
         self.status = name
+        self.user_id = user_id
+        self.provider_id = provider_id
+        self.chat_id = chat_id
+        self.address_id = address_id
 
     def to_json(self):
         return {
@@ -35,4 +39,8 @@ class Pax(db.Model):
             'name': self.name,
             'price': self.price,
             'status': self.status,
+            'user_id': self.user_id,
+            'provider_id': self.provider_id,
+            'chat_id': self.chat_id,
+            'address_id': self.address_id
         }
