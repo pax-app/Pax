@@ -1,5 +1,6 @@
 from database_singleton import Singleton
 from flask import request, jsonify
+from project.api.models import Pax
 
 db = Singleton().database_connection()
 
@@ -23,3 +24,8 @@ class Utils:
         db.session.add(model)
         db.session.flush()
         db.session.commit()
+
+    def filter_by_status(self, value):
+        pax = Pax.query.filter_by(
+            status=value).all()
+        return pax
