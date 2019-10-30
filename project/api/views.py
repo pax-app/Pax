@@ -23,7 +23,6 @@ def add_pax():
     description = pax.get('description')
     name = pax.get('name')
     price = pax.get('price')
-    status = pax.get('status')
     user_id = pax.get('user_id')
     provider_id = pax.get('provider_id')
     chat_id = pax.get('chat_id')
@@ -31,7 +30,7 @@ def add_pax():
 
     try:
         pax = Pax(date, description, name,
-                  price, status, user_id, provider_id, chat_id, address_id)
+                  price, 'P', user_id, provider_id, chat_id, address_id)
         utils.commit_to_database(pax)
         return jsonify(utils.createSuccessMessage('Pax was created!')), 201
 
@@ -50,7 +49,7 @@ def get_finalized_pax(user_kind, id):
     except ValueError:
         return jsonify(utils.createFailMessage('Cannot find user')), 404
 
-    return jsonify(utils.createSuccessGet(finalized_pax.to_json())), 200
+    return jsonify(utils.createSuccessGet(finalized_pax)), 200
 
 
 @pax_blueprint.route('/initiated_pax/<user_kind>/<id>', methods=['GET'])
@@ -63,7 +62,7 @@ def get_initiated_pax(user_kind, id):
     except ValueError:
         return jsonify(utils.createFailMessage('Cannot find user')), 404
 
-    return jsonify(utils.createSuccessGet(initiated_pax.to_json())), 200
+    return jsonify(utils.createSuccessGet(initiated_pax)), 200
 
 
 @pax_blueprint.route('/canceled_pax/<user_kind>/<id>', methods=['GET'])
@@ -76,7 +75,7 @@ def get_canceled_pax(user_kind, id):
     except ValueError:
         return jsonify(utils.createFailMessage('Cannot find user')), 404
 
-    return jsonify(utils.createSuccessGet(canceled_pax.to_json())), 200
+    return jsonify(utils.createSuccessGet(canceled_pax)), 200
 
 
 @pax_blueprint.route('/pendent_pax/<user_kind>/<id>', methods=['GET'])
@@ -89,4 +88,4 @@ def get_pendent_pax(user_kind, id):
     except ValueError:
         return jsonify(utils.createFailMessage('Cannot find user')), 404
 
-    return jsonify(utils.createSuccessGet(pendent_pax.to_json())), 200
+    return jsonify(utils.createSuccessGet(pendent_pax)), 200
