@@ -9,8 +9,8 @@ db = Singleton().database_connection()
 utils = Utils()
 
 
-@pax_blueprint.route('/receipt', methods=['POST'])
-def add_receipt():
+@pax_blueprint.route('/create_pax', methods=['POST'])
+def add_pax():
     post_data = request.get_json()
 
     if not post_data:
