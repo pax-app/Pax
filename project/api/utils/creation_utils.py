@@ -20,6 +20,13 @@ class Utils:
         }
         return response_object
 
+    def createSuccessGet(self, content):
+        response_object = {
+            'status': 'success',
+            'data': content
+        }
+        return response_object
+
     def commit_to_database(self, model):
         db.session.add(model)
         db.session.flush()
