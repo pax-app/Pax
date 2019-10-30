@@ -51,3 +51,16 @@ def get_finalized_pax(user_kind, id):
         return jsonify(utils.createFailMessage('Cannot find user')), 404
 
     return jsonify(utils.createSuccessGet(finalized_pax.to_json())), 200
+
+
+@pax_blueprint.route('/initiated_pax/<user_kind>/<id>', methods=['GET'])
+def get_initiated_pax(user_kind, id):
+    try:
+        context = Context(InitiatedStrategy())
+        initiated_pax = context.execute_filtering(user_kind, int(id))
+        if not initiated_pax:
+            return jsonify(utils.createFailMessage('Cannot find user')), 404
+    except ValueError:
+        return jsonify(utils.createFailMessage('Cannot find user')), 404
+
+    return jsonify(utils.createSuccessGet(initiated_pax.to_json())), 200
