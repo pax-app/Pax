@@ -25,7 +25,11 @@ class Utils:
         db.session.flush()
         db.session.commit()
 
-    def filter_by_status(self, value):
-        pax = Pax.query.filter_by(
-            status=value).all()
+    def filter_by_status(self, value, user_type, id):
+        if user_type == 'provider':
+            pax = Pax.query.filter_by(
+                status=value, provider_id=int(id)).all()
+        elif user_type == 'user':
+            pax = Pax.query.filter_by(
+                status=value, user_id=int(id)).all()
         return pax
