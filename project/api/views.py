@@ -64,3 +64,16 @@ def get_initiated_pax(user_kind, id):
         return jsonify(utils.createFailMessage('Cannot find user')), 404
 
     return jsonify(utils.createSuccessGet(initiated_pax.to_json())), 200
+
+
+@pax_blueprint.route('/canceled_pax/<user_kind>/<id>', methods=['GET'])
+def get_canceled_pax(user_kind, id):
+    try:
+        context = Context(CanceledStrategy())
+        canceled_pax = context.execute_filtering(user_kind, int(id))
+        if not canceled_pax:
+            return jsonify(utils.createFailMessage('Cannot find user')), 404
+    except ValueError:
+        return jsonify(utils.createFailMessage('Cannot find user')), 404
+
+    return jsonify(utils.createSuccessGet(canceled_pax.to_json())), 200
