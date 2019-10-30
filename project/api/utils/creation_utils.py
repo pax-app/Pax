@@ -1,6 +1,4 @@
-import requests
 from database_singleton import Singleton
-from project.api.models import ProviderModel, UserModel, WorksModel
 from flask import request, jsonify
 
 db = Singleton().database_connection()
