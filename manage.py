@@ -1,6 +1,5 @@
 from project import create_app
 from flask.cli import FlaskGroup
-from database import db
 from flask import current_app
 
 # Config coverage report
