@@ -1,9 +1,9 @@
+from project.api.utils.status_strategy import Context, InitiatedStrategy, FinalizedStrategy, CanceledStrategy, PendentStrategy
+from project.api.utils.creation_utils import Utils
 from flask import request, jsonify, Blueprint
 from database_singleton import Singleton
-from project.api.utils.creation_utils import Utils
 from project.api.models import Pax
 from sqlalchemy import exc
-from project.api.utils.status_strategy import Context, InitiatedStrategy, FinalizedStrategy, CanceledStrategy, PendentStrategy
 
 pax_blueprint = Blueprint('pax', __name__)
 db = Singleton().database_connection()
@@ -37,6 +37,25 @@ def add_pax():
     except exc.IntegrityError:
         db.session.rollback()
         return jsonify(utils.createFailMessage('Wrong JSON')), 400
+
+
+@pax_blueprint.route('/consult_pax', methods=['GET'])
+def consult_pax():
+    chat_id = request.args.get('chat_id')
+
+    pax = Pax.query.filter_by(chat_id=chat_id).all()
+
+    if not pax:
+        return jsonify({'exists': 'false'}), 400
+
+    data = [row.to_json() for row in pax]
+
+    response = {
+        'exists': 'true',
+        'pax': data[0]
+    }
+
+    return jsonify(response), 400
 
 
 @pax_blueprint.route('/finalized_pax/<user_kind>/<id>', methods=['GET'])
