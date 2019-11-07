@@ -12,12 +12,10 @@ utils = Utils()
 
 @pax_blueprint.route('/upCreate_pax', methods=['POST'])
 def upCreate():
-    post_data = request.get_json()
+    pax = request.get_json()
 
-    if not post_data:
+    if not pax:
         return jsonify(utils.createFailMessage('Wrong JSON')), 400
-
-    pax = post_data.get('pax')
 
     date = pax.get('date')
     description = pax.get('description')
