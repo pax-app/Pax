@@ -29,8 +29,12 @@ class Utils:
         }
         return response_object
 
-    def commit_to_database(self, model):
-        db.session.add(model)
+    def commit_to_database(self, type, model):
+        if (type == 'A'):
+            db.session.add(model)
+        elif (type == 'M'):
+            db.session.merge(model)
+
         db.session.flush()
         db.session.commit()
 

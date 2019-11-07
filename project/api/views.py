@@ -10,8 +10,8 @@ db = Singleton().database_connection()
 utils = Utils()
 
 
-@pax_blueprint.route('/create_pax', methods=['POST'])
-def add_pax():
+@pax_blueprint.route('/upCreate_pax', methods=['POST'])
+def upCreate():
     post_data = request.get_json()
 
     if not post_data:
@@ -28,11 +28,28 @@ def add_pax():
     chat_id = pax.get('chat_id')
     address_id = pax.get('address_id')
 
+    row = Pax.query.filter_by(chat_id=chat_id).first()
+
+    if row is None:
+        try:
+            pax = Pax(date, description, name,
+                      price, 'P', user_id, provider_id, chat_id, address_id)
+            utils.commit_to_database('A', pax)
+            return jsonify(utils.createSuccessMessage('Pax was created!')), 201
+
+        except exc.IntegrityError:
+            db.session.rollback()
+            return jsonify(utils.createFailMessage('Wrong JSON')), 400
+
     try:
-        pax = Pax(date, description, name,
-                  price, 'P', user_id, provider_id, chat_id, address_id)
-        utils.commit_to_database(pax)
-        return jsonify(utils.createSuccessMessage('Pax was created!')), 201
+        row.date = date
+        row.description = description
+        row.name = name
+        row.price = price
+        row.address_id = address_id
+
+        utils.commit_to_database('M', row)
+        return jsonify(utils.createSuccessMessage('Pax was updated!')), 201
 
     except exc.IntegrityError:
         db.session.rollback()
@@ -46,7 +63,7 @@ def consult_pax():
     pax = Pax.query.filter_by(chat_id=chat_id).all()
 
     if not pax:
-        return jsonify({'exists': 'false'}), 400
+        return jsonify({'exists': 'false'}), 201
 
     data = [row.to_json() for row in pax]
 
@@ -55,7 +72,7 @@ def consult_pax():
         'pax': data[0]
     }
 
-    return jsonify(response), 400
+    return jsonify(response), 201
 
 
 @pax_blueprint.route('/finalized_pax/<user_kind>/<id>', methods=['GET'])
