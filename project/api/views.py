@@ -1,4 +1,5 @@
 from project.api.utils.status_strategy import Context, InitiatedStrategy, FinalizedStrategy, CanceledStrategy, PendentStrategy
+from project.api.utils.chain_of_responsibility.chain import UpCreate
 from project.api.utils.creation_utils import Utils
 from flask import request, jsonify, Blueprint
 from database_singleton import Singleton
@@ -10,48 +11,15 @@ db = Singleton().database_connection()
 utils = Utils()
 
 
-@pax_blueprint.route('/upCreate_pax', methods=['POST'])
+@pax_blueprint.route('/upCreate', methods=['POST'])
 def upCreate():
     pax = request.get_json()
 
-    if not pax:
-        return jsonify(utils.createFailMessage('Wrong JSON')), 400
-
-    date = pax.get('date')
-    description = pax.get('description')
-    name = pax.get('name')
-    price = pax.get('price')
-    user_id = pax.get('user_id')
-    provider_id = pax.get('provider_id')
     chat_id = pax.get('chat_id')
-    address_id = pax.get('address_id')
-
     row = Pax.query.filter_by(chat_id=chat_id).first()
 
-    if row is None:
-        try:
-            pax = Pax(date, description, name,
-                      price, '', user_id, provider_id, chat_id, address_id)
-            utils.commit_to_database('A', pax)
-            return jsonify(utils.createSuccessMessage('Pax was created!')), 201
-
-        except exc.IntegrityError:
-            db.session.rollback()
-            return jsonify(utils.createFailMessage('Wrong JSON')), 400
-
-    try:
-        row.date = date
-        row.description = description
-        row.name = name
-        row.price = price
-        row.address_id = address_id
-
-        utils.commit_to_database('M', row)
-        return jsonify(utils.createSuccessMessage('Pax was updated!')), 201
-
-    except exc.IntegrityError:
-        db.session.rollback()
-        return jsonify(utils.createFailMessage('Wrong JSON')), 400
+    chain = UpCreate()
+    return chain.execute(request, row)
 
 
 @pax_blueprint.route('/consult_pax', methods=['GET'])
