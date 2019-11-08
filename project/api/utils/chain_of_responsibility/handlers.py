@@ -49,6 +49,21 @@ class UpdateHandler(AbstractHandler):
             return super().handle(request, row)
 
 
+class UpdateStateHandler(AbstractHandler):
+    def handle(self, request, row):
+        try:
+            body = request.get_json()
+
+            status = body.get('status')
+
+            row.status = status
+
+            utils.commit_to_database('M', row)
+            return jsonify(utils.createSuccessMessage('Pax state was updated!')), 201
+        except:
+            return super().handle(request, row)
+
+
 class ErrorHandler(AbstractHandler):
     def handle(self, request, row):
         db.session.rollback()
