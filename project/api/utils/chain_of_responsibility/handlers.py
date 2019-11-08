@@ -47,3 +47,9 @@ class UpdateHandler(AbstractHandler):
 
         except:
             return super().handle(request, row)
+
+
+class ErrorHandler(AbstractHandler):
+    def handle(self, request, row):
+        db.session.rollback()
+        return jsonify(utils.createFailMessage('Wrong JSON')), 400
