@@ -31,7 +31,7 @@ def upCreate():
     if row is None:
         try:
             pax = Pax(date, description, name,
-                      price, 'P', user_id, provider_id, chat_id, address_id)
+                      price, '', user_id, provider_id, chat_id, address_id)
             utils.commit_to_database('A', pax)
             return jsonify(utils.createSuccessMessage('Pax was created!')), 201
 
