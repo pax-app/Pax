@@ -29,3 +29,21 @@ class CreateHandler(AbstractHandler):
 
         else:
             return super().handle(request, row)
+
+
+class UpdateHandler(AbstractHandler):
+    def handle(self, request, row):
+        try:
+            pax = request.get_json()
+
+            row.date = pax.get('date')
+            row.description = pax.get('description')
+            row.name = pax.get('name')
+            row.price = pax.get('price')
+            row.address_id = pax.get('address_id')
+
+            utils.commit_to_database('M', row)
+            return jsonify(utils.createSuccessMessage('Pax was updated!')), 201
+
+        except:
+            return super().handle(request, row)
