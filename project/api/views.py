@@ -22,10 +22,8 @@ def upCreate():
     return chain.execute(request, row)
 
 
-@pax_blueprint.route('/consult_pax', methods=['GET'])
-def consult_pax():
-    chat_id = request.args.get('chat_id')
-
+@pax_blueprint.route('/consult_pax/<chat_id>', methods=['GET'])
+def consult_pax(chat_id):
     pax = Pax.query.filter_by(chat_id=chat_id).all()
 
     if not pax:
