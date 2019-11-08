@@ -22,7 +22,7 @@ def upCreate():
     return chain.execute(request, row)
 
 
-@pax_blueprint.route('/update_status', methods=['POST'])
+@pax_blueprint.route('/update_status', methods=['PATCH'])
 def update_state():
     body = request.get_json()
 
