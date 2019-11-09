@@ -1,42 +1,53 @@
+from project.api.utils.status_strategy import Context, InitiatedStrategy, FinalizedStrategy, CanceledStrategy, PendentStrategy
+from project.api.utils.chain_of_responsibility.chain import UpCreate, UpdateState
+from project.api.utils.creation_utils import Utils
 from flask import request, jsonify, Blueprint
 from database_singleton import Singleton
-from project.api.utils.creation_utils import Utils
 from project.api.models import Pax
 from sqlalchemy import exc
-from project.api.utils.status_strategy import Context, InitiatedStrategy, FinalizedStrategy, CanceledStrategy, PendentStrategy
 
 pax_blueprint = Blueprint('pax', __name__)
 db = Singleton().database_connection()
 utils = Utils()
 
 
-@pax_blueprint.route('/create_pax', methods=['POST'])
-def add_pax():
-    post_data = request.get_json()
+@pax_blueprint.route('/upCreate', methods=['POST'])
+def upCreate():
+    body = request.get_json()
 
-    if not post_data:
-        return jsonify(utils.createFailMessage('Wrong JSON')), 400
+    chat_id = body.get('chat_id')
+    row = Pax.query.filter_by(chat_id=chat_id).first()
 
-    pax = post_data.get('pax')
+    chain = UpCreate()
+    return chain.execute(request, row)
 
-    date = pax.get('date')
-    description = pax.get('description')
-    name = pax.get('name')
-    price = pax.get('price')
-    user_id = pax.get('user_id')
-    provider_id = pax.get('provider_id')
-    chat_id = pax.get('chat_id')
-    address_id = pax.get('address_id')
 
-    try:
-        pax = Pax(date, description, name,
-                  price, 'P', user_id, provider_id, chat_id, address_id)
-        utils.commit_to_database(pax)
-        return jsonify(utils.createSuccessMessage('Pax was created!')), 201
+@pax_blueprint.route('/update_status', methods=['PATCH'])
+def update_state():
+    body = request.get_json()
 
-    except exc.IntegrityError:
-        db.session.rollback()
-        return jsonify(utils.createFailMessage('Wrong JSON')), 400
+    chat_id = body.get('chat_id')
+    row = Pax.query.filter_by(chat_id=chat_id).first()
+
+    chain = UpdateState()
+    return chain.execute(request, row)
+
+
+@pax_blueprint.route('/consult_pax/<chat_id>', methods=['GET'])
+def consult_pax(chat_id):
+    pax = Pax.query.filter_by(chat_id=chat_id).all()
+
+    if not pax:
+        return jsonify({'exists': 'false'}), 201
+
+    data = [row.to_json() for row in pax]
+
+    response = {
+        'exists': 'true',
+        'pax': data[0]
+    }
+
+    return jsonify(response), 201
 
 
 @pax_blueprint.route('/finalized_pax/<user_kind>/<id>', methods=['GET'])

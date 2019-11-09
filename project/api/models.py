@@ -22,7 +22,7 @@ class Pax(db.Model):
         self.description = description
         self.name = name
         self.price = price
-        self.status = name
+        self.status = status
         self.user_id = user_id
         self.provider_id = provider_id
         self.chat_id = chat_id
