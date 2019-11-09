@@ -11,7 +11,7 @@ class Pax(db.Model):
     description = db.Column(db.String(500), nullable=False)
     name = db.Column(db.String(255), nullable=False)
     price = db.Column(db.Float, nullable=False)
-    status = db.Column(db.Enum('F', 'P', 'C', 'I'), nullable=False)
+    status = db.Column(db.Enum('F', 'P', 'C', 'I'), nullable=True)
     user_id = db.Column(db.Integer, nullable=False)
     provider_id = db.Column(db.Integer, nullable=False)
     chat_id = db.Column(db.Integer, nullable=False)
