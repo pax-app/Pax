@@ -22,8 +22,11 @@ def upCreate():
     return chain.execute(request, row)
 
 
-@pax_blueprint.route('/update_status/<chat_id>', methods=['PATCH'])
-def update_state(chat_id):
+@pax_blueprint.route('/update_status', methods=['PATCH'])
+def update_state():
+    body = request.get_json()
+
+    chat_id = body.get('chat_id')
     row = Pax.query.filter_by(chat_id=chat_id).first()
 
     chain = UpdateState()
