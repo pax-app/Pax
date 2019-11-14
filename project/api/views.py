@@ -10,6 +10,7 @@ pax_blueprint = Blueprint('pax', __name__)
 db = Singleton().database_connection()
 utils = Utils()
 
+
 @pax_blueprint.after_request
 def add_header(r):
     """
@@ -17,7 +18,7 @@ def add_header(r):
     """
     r.headers["Cache-Control"] = "no-cache, no-store, must-revalidate, public, max-age=0"
     r.headers["Pragma"] = "no-cache"
-    r.headers["Expires"] = "0"
+    r.headers["Expires"] = "-1"
     return r
 
 
