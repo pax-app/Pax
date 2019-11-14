@@ -16,7 +16,7 @@ def add_header(r):
     """
     Adding headers to prevent page caching
     """
-    r.headers["Cache-Control"] = "no-cache, no-store, must-revalidate, public, max-age=0"
+    r.headers["Cache-Control"] = "no-cache, no-store, must-revalidate, public, max-age=0, post-check=0, pre-check=0"
     r.headers["Pragma"] = "no-cache"
     r.headers["Expires"] = "-1"
     return r
