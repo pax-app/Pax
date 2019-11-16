@@ -33,7 +33,7 @@ class Pax(db.Model):
     def to_json(self):
         return {
             'id': self.pax_id,
-            'date': self.date,
+            'date': self.date.isoformat(),
             'description': self.description,
             'name': self.name,
             'price': self.price,
