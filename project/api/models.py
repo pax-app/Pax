@@ -16,8 +16,9 @@ class Pax(db.Model):
     provider_id = db.Column(db.Integer, nullable=False)
     chat_id = db.Column(db.Integer, nullable=False)
     address_id = db.Column(db.Integer, nullable=False)
+    canceled_motive = db.Column(db.String(500), nullable=False)
 
-    def __init__(self, date, description, name, price, status, user_id, provider_id, chat_id, address_id):
+    def __init__(self, date, description, name, price, status, user_id, provider_id, chat_id, address_id, canceled_motive):
         self.date = date
         self.description = description
         self.name = name
@@ -27,6 +28,7 @@ class Pax(db.Model):
         self.provider_id = provider_id
         self.chat_id = chat_id
         self.address_id = address_id
+        self.canceled_motive = canceled_motive
 
     def to_json(self):
         return {
@@ -39,5 +41,6 @@ class Pax(db.Model):
             'user_id': self.user_id,
             'provider_id': self.provider_id,
             'chat_id': self.chat_id,
-            'address_id': self.address_id
+            'address_id': self.address_id,
+            'canceled_motive': self.canceled_motive,
         }
