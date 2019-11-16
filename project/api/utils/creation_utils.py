@@ -1,6 +1,7 @@
 from database_singleton import Singleton
 from flask import request, jsonify
 from project.api.models import Pax
+from operator import itemgetter
 
 db = Singleton().database_connection()
 
@@ -46,3 +47,22 @@ class Utils:
             pax = Pax.query.filter_by(
                 status=value, user_id=int(id)).all()
         return pax
+
+    def sqlalchemyobj_to_list(self, data):
+        final_list = []
+        for item in data:
+            final_list.append(item.to_json())
+        return final_list
+
+    def ignore_empty_status(self, data) -> list:
+        query = self.sqlalchemyobj_to_list(data)
+        filtered_pax = []
+        for pax in query:
+            if pax['status'] != '':
+                filtered_pax.append(pax)
+        return filtered_pax
+
+
+    def reverse_alphabetical_order(self, data: list) -> list:
+        reverse_alphabetical_pax = sorted(data, key=itemgetter('status'), reverse=True)
+        return reverse_alphabetical_pax
