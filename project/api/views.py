@@ -112,6 +112,7 @@ def get_pendent_pax(user_kind, id):
 
     return jsonify(utils.createSuccessGet(pendent_pax)), 200
 
+
 @pax_blueprint.route('/all_pax/<user_id>', methods=['GET'])
 def get_all_pax(user_id):
     try:
@@ -124,16 +125,19 @@ def get_all_pax(user_id):
         return jsonify(utils.createFailMessage('Cannot find user')), 404
     return jsonify(pax), 200
 
-@pax_blueprint.route('/update_motive/<pax_id>', methods=['PATCH'])
-def update_canceled_motive(pax_id):
+
+@pax_blueprint.route('/update_motive', methods=['PATCH'])
+def update_canceled_motive():
     post_data = request.get_json()
 
-    pax_id = post_data.get('pax_id')
+    chat_id = post_data.get('chat_id')
     canceled_motive = post_data.get('canceled_motive')
 
-    pax = Pax.query.filter_by(pax_id=int(pax_id)).first()
+    pax = Pax.query.filter_by(chat_id=chat_id).first()
     if not pax:
-        return jsonify(utils.createFailMessage('Unexistent Pax')), 404
+        return jsonify(utils.createFailMessage('Inexistent Pax')), 404
+
     pax.canceled_motive = canceled_motive
-    db.session.commit()
-    return jsonify(utils.createSuccessGet('Updated canceled motive!')), 200
+    utils.commit_to_database('M', pax)
+
+    return jsonify(utils.createSuccessMessage('Updated canceled motive!')), 200
