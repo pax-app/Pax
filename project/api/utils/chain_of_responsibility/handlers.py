@@ -49,7 +49,7 @@ class UpdateHandler(AbstractHandler):
             return super().handle(request, row)
 
 
-class UpdateStateHandler(AbstractHandler):
+class UpdateStatusHandler(AbstractHandler):
     def handle(self, request, row):
         try:
             body = request.get_json()
