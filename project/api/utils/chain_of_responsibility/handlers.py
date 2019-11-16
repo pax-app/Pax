@@ -21,9 +21,10 @@ class CreateHandler(AbstractHandler):
             provider_id = pax.get('provider_id')
             chat_id = pax.get('chat_id')
             address_id = pax.get('address_id')
+            canceled_motive = pax.get('canceled_motive')
 
             pax = Pax(date, description, name,
-                      price, '', user_id, provider_id, chat_id, address_id)
+                      price, '', user_id, provider_id, chat_id, address_id, canceled_motive)
             utils.commit_to_database('A', pax)
             return jsonify(utils.createSuccessMessage('Pax was created!')), 201
 
