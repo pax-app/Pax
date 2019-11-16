@@ -1,4 +1,4 @@
-from project.api.utils.chain_of_responsibility.handlers import CreateHandler, UpdateHandler, UpdateStateHandler, ErrorHandler
+from project.api.utils.chain_of_responsibility.handlers import CreateHandler, UpdateHandler, UpdateStatusHandler, ErrorHandler
 
 
 class UpCreate():
@@ -13,8 +13,8 @@ class UpCreate():
         return self._create.handle(request, row)
 
 
-class UpdateState():
-    _update = UpdateStateHandler()
+class UpdateStatus():
+    _update = UpdateStatusHandler()
     _error = ErrorHandler()
 
     def __init__(self):

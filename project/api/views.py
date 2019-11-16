@@ -1,5 +1,5 @@
 from project.api.utils.status_strategy import Context, InitiatedStrategy, FinalizedStrategy, CanceledStrategy, PendentStrategy
-from project.api.utils.chain_of_responsibility.chain import UpCreate, UpdateState
+from project.api.utils.chain_of_responsibility.chain import UpCreate, UpdateStatus
 from project.api.utils.creation_utils import Utils
 from flask import request, jsonify, Blueprint
 from database_singleton import Singleton
@@ -34,13 +34,13 @@ def upCreate():
 
 
 @pax_blueprint.route('/update_status', methods=['PATCH'])
-def update_state():
+def update_status():
     body = request.get_json()
 
     chat_id = body.get('chat_id')
     row = Pax.query.filter_by(chat_id=chat_id).first()
 
-    chain = UpdateState()
+    chain = UpdateStatus()
     return chain.execute(request, row)
 
 
