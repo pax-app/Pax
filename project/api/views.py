@@ -111,3 +111,15 @@ def get_pendent_pax(user_kind, id):
         return jsonify(utils.createFailMessage('Cannot find user')), 404
 
     return jsonify(utils.createSuccessGet(pendent_pax)), 200
+
+@pax_blueprint.route('/all_pax/<user_id>', methods=['GET'])
+def get_all_pax(user_id):
+    try:
+        pax = Pax.query.filter_by(user_id=int(user_id)).all()
+        pax = utils.ignore_empty_status(pax)
+        pax = utils.reverse_alphabetical_order(pax)
+        if not pax:
+            return jsonify(utils.createFailMessage('Cannot find user')), 404
+    except ValueError:
+        return jsonify(utils.createFailMessage('Cannot find user')), 404
+    return jsonify(pax), 200
