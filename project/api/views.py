@@ -126,8 +126,8 @@ def get_all_pax(user_id):
     return jsonify(pax), 200
 
 
-@pax_blueprint.route('/update_motive', methods=['PATCH'])
-def update_canceled_motive():
+@pax_blueprint.route('/cancel_pax', methods=['PATCH'])
+def cancel_pax():
     post_data = request.get_json()
 
     chat_id = post_data.get('chat_id')
@@ -137,6 +137,7 @@ def update_canceled_motive():
     if not pax:
         return jsonify(utils.createFailMessage('Inexistent Pax')), 404
 
+    pax.status = 'C'
     pax.canceled_motive = canceled_motive
     utils.commit_to_database('M', pax)
 
